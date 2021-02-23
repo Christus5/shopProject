@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 from user.models import User
 
@@ -42,7 +43,7 @@ class Item(models.Model):
 class Order(models.Model):
     item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
     cart = models.ForeignKey(to='Cart', on_delete=models.CASCADE)
-    user = models.OneToOneField(to=User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
 
     price = models.PositiveIntegerField()
 
@@ -58,8 +59,12 @@ class Order(models.Model):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
     # @TODO: total - sum of order_set price
 
-    def __str__(self):
+    def get_total_price(self) -> int:
+        return self.order_set.aggregate(Sum('price'))['price__sum']
+
+    def __str__(self) -> str:
         return f'<{self.user}>, {self.id}'

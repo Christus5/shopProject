@@ -1,0 +1,15 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+
+    <div>
+        {% for item in items %}
+            <div>
+                <p>{{ item }} &mdash; {{ item.price }} $ </p>
+                <p><a href="{% url 'ecommerce:item' %}?item_id={{ item.id }}">Details</a></p>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

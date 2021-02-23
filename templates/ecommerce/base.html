@@ -11,6 +11,15 @@
                 </h2>
             </li>
             <li>
+                <a href="{% url 'ecommerce:home' %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'ecommerce:store' %}">Store</a>
+            </li>
+            <li>
+                <a href="{% url 'ecommerce:cart' user.cart_set.last.id %}">cart</a>
+            </li>
+            <li>
             <span>
                 Hello <a href=".">
                     {% if user.first_name %}
