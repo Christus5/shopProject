@@ -23,6 +23,9 @@ class ItemImage(models.Model):
     image = models.ImageField(upload_to=f"""ecommerce/item-images""")
     item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f"{self.item}, <{self.id}>"
+
 
 class Item(models.Model):
     name = models.CharField(max_length=200)

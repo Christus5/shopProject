@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main.css' %}"/>
     <title>Ecommerce</title>
 </head>
 <body>
-    {% block navigation %}
+{% block navigation %}
 
-    {% endblock %}
+{% endblock %}
 
+<div class="page-wrapper">
     {% block content %}
 
     {% endblock %}
+</div>
+
 
 </body>
 </html>

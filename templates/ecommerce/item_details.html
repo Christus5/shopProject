@@ -2,9 +2,10 @@
 
 {% block content %}
     <h2>{{ item.name }}</h2>
+    <img src="{{ item.itemimage_set.first.image.url }}" alt="item_main_image" />
 
     <form method="post">
         {% csrf_token %}
-        <button>Order</button>
+        <button class="btn" type="submit">Order</button>
     </form>
 {% endblock %}

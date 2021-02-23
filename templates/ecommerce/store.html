@@ -1,12 +1,31 @@
 {% extends 'ecommerce/base.html' %}
 
+{% block current_page %}
+    Store
+{% endblock %}
+
 {% block content %}
 
-    <div>
+    <div class="grid">
         {% for item in items %}
-            <div>
-                <p>{{ item }} &mdash; {{ item.price }} $ </p>
-                <p><a href="{% url 'ecommerce:item' %}?item_id={{ item.id }}">Details</a></p>
+            <div class="grid-card">
+                <header>
+                    <img src="{{ item.itemimage_set.first.image.url }}" alt="item-image" class="card-image"/>
+                </header>
+                <div class="tags">
+                    {% for tag in item.tag.all %}
+                        <span class="tag">
+                            {{ tag }}
+                        </span>
+                    {% endfor %}
+                </div>
+                <section>
+                    <br />
+                    <p><strong>{{ item }}</strong> &mdash; {{ item.price }} $ </p>
+                    <br/>
+                    <a href="{% url 'ecommerce:item' %}?item_id={{ item.id }}" class="btn">Details</a>
+                </section>
+
             </div>
 
         {% endfor %}

@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
@@ -35,6 +38,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
     # avatar = models.ImageField()
     email = models.EmailField(max_length=60, unique=True)
+    balance = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
 
     first_name = models.CharField(max_length=60, null=True, blank=True)
     last_name = models.CharField(max_length=60, null=True, blank=True)

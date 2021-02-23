@@ -5,17 +5,16 @@
 {% endblock %}
 
 {% block content %}
+
     <h3>My orders</h3>
     {% if not orders %}
         <p>You have no orders yet</p>
     {% endif %}
     <ol>
-
         {% for order in orders %}
             <li>
                 <a href="{% url 'ecommerce:order' order.id %}">
                     {{ order.item }}
-
                 </a>
             </li>
         {% endfor %}
