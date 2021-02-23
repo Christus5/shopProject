@@ -37,10 +37,11 @@
 
 .tag {
     background: var(--blue);
-    padding: 5px;
+    padding: 0.5em;
     box-sizing: border-box;
     border-radius: 25px;
     color: white;
+    display: inline-block;
 }
 
 .tag:not(:first-child) {

@@ -56,7 +56,6 @@ a:hover {
     margin: 5em 25px;
 }
 
-
 .background {
     background-color: var(--blue);
     position: absolute;
@@ -97,6 +96,7 @@ a:hover {
 
 .item-page-wrapper {
     display: grid;
+    grid-row-gap: 1em;
     grid-template-rows: [row-first] auto [row-b-last] 1fr [row-last];
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
@@ -130,4 +130,11 @@ a:hover {
     grid-column-end: end;
     grid-row-start: 4;
     grid-row-end: 4
+}
+
+.item-page-wrapper > .tags {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 4;
+    grid-row-end: 4;
 }
