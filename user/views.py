@@ -44,12 +44,14 @@ class LogoutView(View):
 
 
 class RegisterView(View):
+    template_name = 'user/user_registration.html'
+
     def get(self, request, *args, **kwargs) -> 'HttpResponse':
         if request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
 
         registration_form = RegistrationForm()
-        return render(request, 'user/user_registration.html', {
+        return render(request, self.template_name, {
             'registration_form': registration_form
         })
 
@@ -63,6 +65,6 @@ class RegisterView(View):
             messages.success(request, f"""Successfully registered {registration_form.cleaned_data['username']}""")
             return redirect(settings.LOGOUT_REDIRECT_URL)
 
-        return render(request, 'user/user_registration.html', {
+        return render(request, self.template_name, {
             'registration_form': registration_form
         })
