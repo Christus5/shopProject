@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+    <nav>
+        <ul>
+            <li>
+                <h2>
+                    {% block current_page %}
+
+                    {% endblock %}
+                </h2>
+            </li>
+            <li>
+            <span>
+                Hello <a href=".">
+                    {% if user.first_name %}
+                        {{ user.first_name }}
+                    {% else %}
+                        {{ user }}
+                    {% endif %}</a>
+            </span>
+            </li>
+            <li>
+
+                <a href="{% url 'user:logout' %}">Log out</a>
+            </li>
+        </ul>
+
+
+    </nav>
+{% endblock %}

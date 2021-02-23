@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from ecommerce.models import *
+
+admin.site.register([Item, Tag, Order, Info, ItemImage, Cart])

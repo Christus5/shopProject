@@ -1,54 +1,65 @@
 from django.db import models
 
+from user.models import User
+
 
 class Tag(models.Model):
-    # @TODO: title
-    pass
+    title = models.CharField(max_length=30)
+
+    def __str__(self) -> str:
+        return self.title
 
 
 class Info(models.Model):
-    # @TODO: title
-    # @TODO: description
-    pass
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+
+    def __str__(self) -> str:
+        return self.title
 
 
 class ItemImage(models.Model):
-    # @TODO: image
-    # @TODO: Item - 1 to many
-    pass
+    image = models.ImageField(upload_to=f"""ecommerce/item-images""")
+    item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
 
 
 class Item(models.Model):
-    # @TODO: tags - many to many
-    # @TODO: seller (User) - 1 to many
+    name = models.CharField(max_length=200)
+    tag = models.ManyToManyField(to='Tag', null=True, blank=True)
+    info = models.ForeignKey(to='Info', on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
 
-    # @TODO: available - boolean
-    pass
+    quantity = models.PositiveIntegerField(default=1)
+    available = models.BooleanField(default=True)
+    price = models.PositiveIntegerField()
 
-
-class IndividualItem(models.Model):
-    # @TODO: Info - many to many
-    # @TODO: Item - 1 to many
     # @TODO: condition - (new, used-good, used-normal, used-damaged)
-    # @TODO: price
-    pass
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Order(models.Model):
-    # @TODO: IndividualItem - 1 to 1
-    # @TODO: Cart - 1 to many
-    # @TODO: buyer (User) - 1 to many
+    item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
+    cart = models.ForeignKey(to='Cart', on_delete=models.CASCADE)
+    user = models.OneToOneField(to=User, on_delete=models.DO_NOTHING)
 
-    # @TODO: price - Q+
+    price = models.PositiveIntegerField()
+
+    ordered = models.DateTimeField(auto_now_add=True)
 
     # @TODO: deliver_from - address
     # @TODO: deliver_to - address
 
     # @TODO: ordered - time when user placed order
-    pass
+
+    def __str__(self) -> str:
+        return f'<{self.user}>, {self.id}'
 
 
 class Cart(models.Model):
-    # @TODO: User - 1 to 1
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     # @TODO: total - sum of order_set price
-    pass
+
+    def __str__(self):
+        return f'<{self.user}>, {self.id}'
