@@ -12,7 +12,7 @@
     position: relative;
     border-top-left-radius: 25px;
     border-bottom-right-radius: 25px;
-    border-bottom: 2px solid var(--graphite);
+    border-bottom: 2px solid var(--lime);
     padding: 25px;
     box-sizing: border-box;
     top: 0;

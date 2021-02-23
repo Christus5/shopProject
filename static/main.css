@@ -8,6 +8,9 @@
     --dark-blue: #1953ff;
     --lime: #6aff0e;
     --graphite: #242121;
+    --green: #19b501;
+    --red: #ff1f31;
+    --orange: #f8a00a;
 }
 
 * {
@@ -50,6 +53,11 @@ a:hover {
     color: var(--lime);
     border: 1px solid var(--lime);
     box-shadow: 0 0 20px -5px var(--lime);
+}
+
+.btn-white {
+    background-color: white;
+    color: var(--blue)
 }
 
 .page-wrapper {
@@ -137,4 +145,41 @@ a:hover {
     grid-column-end: 2;
     grid-row-start: 4;
     grid-row-end: 4;
+}
+
+.orders {
+    list-style: none;
+}
+
+.orders li {
+    display: grid;
+    margin: 0.5em 0;
+    grid-template-columns: 60% 20%;
+    justify-content: center;
+    grid-column-gap: 2em;
+}
+
+.orders a {
+    margin: auto 0;
+    display: inline-block;
+}
+
+.order-status {
+    display: inline-block;
+    padding: 0.5em;
+    margin: auto 0;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.pending {
+    background-color: var(--red);
+}
+
+.shipped {
+    background-color: var(--orange);
+}
+
+.delivered {
+    background-color: var(--green);
 }

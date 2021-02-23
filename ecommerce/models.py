@@ -52,6 +52,14 @@ class Order(models.Model):
 
     ordered = models.DateTimeField(auto_now_add=True)
 
+    StatusChoices = [
+        ('Pending', 'pending'),
+        ('Shipped', 'shipped'),
+        ('Delivered', 'delivered')
+    ]
+
+    status = models.CharField(choices=StatusChoices, max_length=30, default='Pending')
+
     # @TODO: deliver_from - address
     # @TODO: deliver_to - address
 
@@ -64,6 +72,7 @@ class Order(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+
     # @TODO: total - sum of order_set price
 
     def get_total_price(self) -> int:

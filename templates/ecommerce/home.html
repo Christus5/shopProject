@@ -6,24 +6,24 @@
 
 {% block page-content %}
 
-    <div class="card m">
+    <div class="card l" style="min-width: 350px">
         <header>
             <h3>My orders</h3>
-
         </header>
         <section>
             {% if not orders %}
                 <p>You have no orders yet</p>
             {% endif %}
-            <ol>
+            <ul class="orders">
                 {% for order in orders %}
                     <li>
-                        <a href="{% url 'ecommerce:order' order.id %}">
+                        <a href="{% url 'ecommerce:order' order.id %}" class="btn btn-white">
                             {{ order.item }}
                         </a>
+                        <span class="order-status {{ order.status|lower }}">{{ order.status }}</span>
                     </li>
                 {% endfor %}
-            </ol>
+            </ul>
         </section>
 
     </div>
