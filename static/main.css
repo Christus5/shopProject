@@ -1,8 +1,11 @@
-@import url('components/login.css');
+@import url('./components/login.css');
 @import url('./components/navbar.css');
+@import url('./components/card.css');
+@import url('./components/grid.css');
 
 :root {
     --blue: #3f5efa;
+    --dark-blue: #1953ff;
     --lime: #6aff0e;
     --graphite: #242121;
 }
@@ -53,46 +56,15 @@ a:hover {
     margin: 5em 25px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 1em;
-    column-gap: 1em;
-    width: 100%;
-}
 
-.grid-card {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 0 20px -5px black;
-    padding: 25px;
-    box-sizing: border-box;
-}
-
-.grid-card header {
-    text-align: center;
-}
-
-.card-image {
-    height: 250px;
-}
-
-.tags {
-    display: flex;
-}
-
-.tag {
-    background: var(--blue);
-    padding: 5px;
-    box-sizing: border-box;
-    border-radius: 25px;
-    color: white;
-}
-
-.tag:not(:first-child) {
-    margin: 0 5px;
+.background {
+    background-color: var(--blue);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
 }
 
 .item-main-image {
@@ -104,15 +76,6 @@ a:hover {
     box-sizing: border-box;
 }
 
-.background {
-    background-color: var(--blue);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-}
 
 .error-messages {
     color: red;
@@ -129,3 +92,4 @@ a:hover {
     list-style: none;
     border-bottom: 1px solid var(--graphite);
 }
+

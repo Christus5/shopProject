@@ -1,0 +1,49 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1em;
+    column-gap: 1em;
+    width: 100%;
+}
+
+.grid-card > header {
+    text-align: center;
+    border-bottom: 2px solid var(--graphite);
+    margin: 0.5em 0;
+}
+
+.grid-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 20px -5px black;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.grid-card > section {
+    margin: 0.5em 0;
+}
+
+.grid-card-image {
+    max-width: 100%;
+    height: 250px;
+}
+
+.tags {
+    display: flex;
+}
+
+.tag {
+    background: var(--blue);
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 25px;
+    color: white;
+}
+
+.tag:not(:first-child) {
+    margin: 0 5px;
+}
+

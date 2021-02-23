@@ -1,0 +1,40 @@
+.card {
+    background-color: var(--blue);
+    border-bottom-right-radius: 25px;
+    border-top-left-radius: 25px;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 0 20px -5px black;
+}
+
+.card > header {
+    position: relative;
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom: 2px solid var(--graphite);
+    padding: 25px;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    background-color: var(--dark-blue);
+}
+
+.card > section {
+    border-top-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.s {
+    width: 15%;
+}
+
+.m {
+    width: 35%;
+}
+
+.l {
+    width: 70%;
+}
