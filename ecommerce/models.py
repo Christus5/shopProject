@@ -29,7 +29,7 @@ class ItemImage(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=200)
-    tag = models.ManyToManyField(to='Tag', null=True, blank=True)
+    tag = models.ManyToManyField(to='Tag')
     info = models.ForeignKey(to='Info', on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
 

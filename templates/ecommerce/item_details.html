@@ -1,23 +1,28 @@
 {% extends 'ecommerce/base.html' %}
 
 {% block page-content %}
+    <div class="item-page-wrapper">
 
-    <header>
-        <h2>{{ item.name }}</h2>
+        <h2 class="title">{{ item.name }}</h2>
         <img src="{{ item.itemimage_set.first.image.url }}" alt="item_main_image" class="item-main-image"/>
-    </header>
 
-    {% if item.info %}
-        <div>
-            <p><strong>{{ item.info.title }}</strong></p>
-            <p>{{ item.info.description }}</p>
-        </div>
-    {% endif %}
+        <section>
+            <h3>Price &mdash; {{ item.price }}$</h3>
+            {% if item.info %}
+                <div>
+                    <p><strong>{{ item.info.title }}</strong></p>
+                    <p>{{ item.info.description }}</p>
+                </div>
+            {% endif %}
 
-    <br/>
-    <form method="post">
-        {% csrf_token %}
-        <button class="btn" type="submit">Order</button>
-    </form>
+            <br/>
+
+        </section>
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn" style="width: 100%;" type="submit">Order</button>
+        </form>
+    </div>
+
 
 {% endblock %}
