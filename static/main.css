@@ -1,6 +1,10 @@
+@import url('components/login.css');
+@import url('./components/navbar.css');
+
 :root {
     --blue: #3f5efa;
     --lime: #6aff0e;
+    --graphite: #242121;
 }
 
 * {
@@ -12,39 +16,6 @@ body {
     font-family: Consolas, Arial, sans-serif;
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    box-shadow: 0 0 20px -5px black;
-    width: 100%;
-    padding: 1em;
-    background-color: var(--blue);
-    min-height: 60px;
-}
-
-.nav-current-page {
-    flex: 7;
-}
-
-.nav-links {
-    display: flex;
-    flex: 3;
-}
-
-.nav-links li {
-    display: flex;
-    list-style: none;
-    flex: 1;
-    justify-content: center;
-    text-align: center;
-}
-
-.nav-links a {
-    display: inline-block;
-    margin: auto 0;
-    color: white;
-}
 
 a {
     text-decoration: none;
@@ -72,7 +43,7 @@ a:hover {
 
 .btn:hover {
     transition: 0.3s ease-out;
-    background: black;
+    background-color: var(--graphite);
     color: var(--lime);
     border: 1px solid var(--lime);
     box-shadow: 0 0 20px -5px var(--lime);
@@ -122,4 +93,23 @@ a:hover {
 
 .tag:not(:first-child) {
     margin: 0 5px;
+}
+
+.item-main-image {
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 450px;
+    max-height: 450px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.background {
+    background-color: var(--blue);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
 }

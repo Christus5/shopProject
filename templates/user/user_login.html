@@ -1,22 +1,30 @@
 {% extends 'user/base.html' %}
 
 {% block content %}
-    <h1>Login</h1>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="background"></div>
+    <div class="login-wrapper">
 
-    <form method="post">
-        {% csrf_token %}
-        {{ login_form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-    <p>
-        Need account?
-        <a href="{% url 'user:register' %}">Register</a>
-    </p>
+        <h1>Login</h1>
+        <br/>
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in login_form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p>
+            Need account?
+            <a href="{% url 'user:register' %}">Register</a>
+        </p>
+    </div>
 {% endblock %}

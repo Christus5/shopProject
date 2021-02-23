@@ -1,0 +1,51 @@
+.login-wrapper {
+    width: 350px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2em;
+    box-sizing: border-box;
+    box-shadow: 10px 0 20px -5px black;
+    color: white;
+}
+
+.login-wrapper input {
+    display: block;
+    padding: 0.7em;
+    margin: 0.5em 0;
+    width: 100%;
+    border: 1px solid white;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.login-wrapper input:hover {
+    border: 1px solid var(--lime);
+    box-shadow: 0 0 20px -5px var(--lime);
+    transition: 0.3s ease-out;
+}
+
+.login-wrapper input:focus {
+    border: 1px solid var(--lime);
+    box-shadow: 0 0 20px -5px var(--lime);
+    transition: 0.3s ease-out;
+
+}
+
+.login-wrapper button {
+    width: 100%;
+    margin: 1em 0;
+}
+
+@media only screen and (max-width: 800px) {
+    .login-wrapper {
+        position: static;
+        margin: 0 auto;
+        height: 450px;
+    }
+}

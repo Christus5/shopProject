@@ -29,3 +29,11 @@
     </nav>
     <h2 style="text-align: right; margin-right: 1em; margin-top: 0.5em;">Balance: {{ user.balance }} $</h2>
 {% endblock %}
+
+{% block content %}
+    <div class="page-wrapper">
+        {% block page-content %}
+
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px -5px black;
+    width: 100%;
+    padding: 1em;
+    background-color: var(--blue);
+    min-height: 60px;
+}
+
+.nav-current-page {
+    flex: 7;
+}
+
+.nav-links {
+    display: flex;
+    flex: 3;
+}
+
+.nav-links li {
+    display: flex;
+    list-style: none;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+}
+
+.nav-links a {
+    display: inline-block;
+    margin: auto 0;
+    color: white;
+}
