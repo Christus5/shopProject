@@ -113,3 +113,19 @@ a:hover {
     right: 0;
     z-index: -1;
 }
+
+.error-messages {
+    color: red;
+    max-height: 100px;
+    overflow-y: scroll;
+    background: white;
+    border: 2px solid var(--graphite);
+    border-radius: 2px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.error-messages ul {
+    list-style: none;
+    border-bottom: 1px solid var(--graphite);
+}

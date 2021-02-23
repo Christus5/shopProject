@@ -1,15 +1,28 @@
 {% extends 'user/base.html' %}
 
 {% block content %}
+    <div class="background"></div>
+    <div class="login-wrapper" style="justify-content: normal">
+        <h1>Register</h1>
+        <br/>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in registration_form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+            {% if registration_form.errors %}
+                <div class="error-messages">
+                    {{ registration_form.errors }}
+                </div>
+            {% endif %}
+            <button class="btn">Register</button>
+        </form>
+        <p>
+            Already have an account?
+            <a href="{% url 'user:login' %}">Login</a>
+        </p>
 
-    <h1>Register</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ registration_form.as_p }}
-        <button>Register</button>
-    </form>
-    <p>
-        Already have an account?
-        <a href="{% url 'user:login' %}">Login</a>
-    </p>
+    </div>
+
 {% endblock %}
