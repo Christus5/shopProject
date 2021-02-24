@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from django.views.generic import View
+from django.views.generic import View, DeleteView, ListView
 
 from ecommerce.models import *
 
@@ -75,7 +76,7 @@ class CartDetailsView(View):
         cart = get_object_or_404(request.user.cart_set, pk=kwargs['cart_id'])
 
         if not cart.is_active:
-            messages.error(request, 'Cart not active')
+            messages.error(request, 'Invalid access to cart')
             return redirect(to='ecommerce:home')
 
         return render(request, self.template_name, {
@@ -83,14 +84,26 @@ class CartDetailsView(View):
         })
 
     def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        pass
+        user = request.user
+        cart = get_object_or_404(request.user.cart_set, pk=kwargs['cart_id'])
+
+        if user.balance >= cart.get_total_price():
+            return redirect(to='ecommerce:home')
+
+        messages.error(request, 'Insufficient funds!')
+        return render(request, self.template_name, {
+            'cart': cart
+        })
 
 
 @method_decorator(login_required, name='dispatch')
-class StoreView(View):
+class StoreView(ListView):
     template_name = 'ecommerce/store.html'
+    model = Item
+    paginate_by = 4
+    context_object_name = 'items'
 
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        return render(request, self.template_name, {
-            'items': Item.objects.all()
-        })
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context

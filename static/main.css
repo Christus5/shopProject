@@ -4,6 +4,8 @@
 @import url('./components/grid.css');
 @import url('./components/scroll-bar.css');
 
+@import "cart-page.css";
+
 :root {
     --blue: #3f5efa;
     --dark-blue: #1953ff;
@@ -58,7 +60,8 @@ a:hover {
 
 .btn-white {
     background-color: white;
-    color: var(--blue)
+    color: var(--blue);
+    border-color: white;
 }
 
 .page-wrapper {

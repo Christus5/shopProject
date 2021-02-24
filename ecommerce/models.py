@@ -81,8 +81,8 @@ class Cart(models.Model):
 
     # @TODO: total - sum of order_set price
 
-    def get_total_price(self) -> int:
-        return self.order_set.aggregate(Sum('price'))['price__sum']
+    def get_total_price(self) -> Decimal:
+        return round(self.order_set.aggregate(Sum('price'))['price__sum'], 2) if self.order_set.all() else 0
 
     def __str__(self) -> str:
         return f'<{self.user}>, {self.id}'

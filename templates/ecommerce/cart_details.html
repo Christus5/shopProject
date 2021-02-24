@@ -5,18 +5,41 @@
 {% endblock %}
 
 {% block page-content %}
-
-    <dl>
-        {% for order in cart.order_set.all %}
-            <dt>
-                {{ order }}
-            </dt>
-            <dd>
-                {{ order.item }}
-            </dd>
-        {% endfor %}
-    </dl>
-
     <h3>Total: {{ cart.get_total_price }}</h3>
+
+    <div class="card large">
+        <header>
+            <h2>Cart</h2>
+        </header>
+        <section>
+            {% if not cart.order_set %}
+                <p>Cart is empty</p>
+                <a href="{% url 'ecommerce:store' %}">Shop Now</a>
+            {% endif %}
+            <ul class="orders">
+                <h3>Items in cart</h3>
+                {% for order in cart.order_set.all %}
+                    <li>
+                        <a href="{% url 'ecommerce:order' order.id %}" class="btn btn-white">
+                            {{ order.item }}
+                        </a>
+                        <span class="order-status {{ order.status|lower }}">{{ order.status }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+    </div>
+    {% if messages %}
+        <div style="text-align: center; color: red; margin: 0.5em 0;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form class="checkout" method="post">
+        {% csrf_token %}
+        <button class="btn" type="submit">Proceed To checkout</button>
+    </form>
 
 {% endblock %}
