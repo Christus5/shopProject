@@ -5,8 +5,9 @@ from django.http import Http404
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from django.views.generic import View, ListView, DetailView, DeleteView
+from django.views.generic import View, ListView, DetailView, DeleteView, CreateView
 
+from ecommerce.forms import ItemCreationForm, InfoCreationForm
 from ecommerce.models import *
 
 
@@ -27,7 +28,7 @@ class HomeView(View):
 @method_decorator(login_required, name='dispatch')
 class ItemView(DetailView):
     model = Item
-    template_name = 'ecommerce/item_details.html'
+    template_name = 'ecommerce/item/item_details.html'
     context_object_name = 'item'
 
     def post(self, request, *args, **kwargs) -> 'HttpResponse':
@@ -43,6 +44,34 @@ class ItemView(DetailView):
         order = Order(item=item, user=user, cart=user.cart_set.last(), price=item.price)
         order.save()
         return redirect(to='ecommerce:order', pk=order.pk)
+
+
+@method_decorator(login_required, name='dispatch')
+class ItemCreateView(CreateView):
+    model = Item
+    template_name = 'ecommerce/item/item_create.html'
+    form_class = ItemCreationForm
+
+    def form_valid(self, form):
+        form.instance.user = User.objects.get(pk=self.request.user.pk)
+        form.save()
+        return redirect(to='ecommerce:home')
+
+
+@method_decorator(login_required, name='dispatch')
+class ItemCreateInfoView(CreateView):
+    model = Info
+    template_name = 'ecommerce/item/item_create.html'
+    form_class = InfoCreationForm
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(to='ecommerce:home')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 @method_decorator(login_required, name='dispatch')

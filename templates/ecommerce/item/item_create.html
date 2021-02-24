@@ -1,0 +1,13 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block current_page %}
+    Sell
+{% endblock %}
+
+{% block page-content %}
+    <form method="post">
+    {% csrf_token %}
+        {{ form }}
+        <button class="btn" type="submit">Add</button>
+    </form>
+{% endblock %}
