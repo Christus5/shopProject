@@ -1,0 +1,32 @@
+.paginator-wrapper {
+    margin: 5em auto 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.paginator-wrapper a {
+    border: 1px solid var(--blue);
+    padding: 0.3em;
+    background-color: var(--blue);
+    color: white;
+    border-radius: 3px;
+}
+
+.paginator-wrapper a:not(:first-child){
+    margin-left: 0.2em;
+}
+
+a.disabled {
+    cursor: not-allowed;
+    color: white;
+    border-color: var(--green);
+    background-color: var(--graphite);
+}
+
+.paginator-wrapper a:hover {
+    text-decoration: none;
+    font-weight: unset;
+    border-color: var(--green);
+    background-color: var(--graphite);
+    color: white;
+}

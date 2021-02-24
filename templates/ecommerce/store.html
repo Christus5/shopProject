@@ -20,7 +20,7 @@
                     {% endfor %}
                 </div>
                 <section>
-                    <br />
+                    <br/>
                     <p><strong>{{ item }}</strong> &mdash; {{ item.price }} $ </p>
                     <br/>
                     <a href="{% url 'ecommerce:item' %}?item_id={{ item.id }}" class="btn">Details</a>
@@ -29,6 +29,29 @@
             </div>
 
         {% endfor %}
+    </div>
+
+    <div class="paginator-wrapper">
+        {% if page_obj.has_previous %}
+            <a href="?page=1
+            {% if request.GET.name %}&name={{ request.GET.name }}{% endif %}">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}
+            {% if request.GET.name %}&name={{ request.GET.name }}{% endif %}">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="disabled">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}
+            {% if request.GET.name %}&name={{ request.GET.name }}{% endif %}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}
+            {% if request.GET.name %}&name={{ request.GET.name }}{% endif %}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}
+            {% if request.GET.name %}&name={{ request.GET.name }}{% endif %}">Last</a>
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -14,9 +14,10 @@
 
 .grid-card {
     width: 100%;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     box-shadow: 0 0 20px -5px black;
     padding: 25px;
     box-sizing: border-box;
