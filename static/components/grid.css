@@ -37,7 +37,7 @@
 }
 
 .tag {
-    background: var(--blue);
+    background-color: var(--blue);
     padding: 0.5em;
     box-sizing: border-box;
     border-radius: 25px;

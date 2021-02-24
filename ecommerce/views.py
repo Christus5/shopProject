@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from django.views.generic import View, DeleteView, ListView
+from django.views.generic import View, ListView, DetailView, DeleteView
 
 from ecommerce.models import *
 
@@ -25,22 +24,14 @@ class HomeView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class ItemView(View):
+class ItemView(DetailView):
+    model = Item
     template_name = 'ecommerce/item_details.html'
-
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        try:
-            item = Item.objects.get(pk=request.GET.get('item_id'))
-        except:
-            return redirect(to='ecommerce:home')
-
-        return render(request, self.template_name, {
-            'item': item
-        })
+    context_object_name = 'item'
 
     def post(self, request, *args, **kwargs) -> 'HttpResponse':
         try:
-            item = Item.objects.get(pk=request.GET.get('item_id'))
+            item = self.get_object()
             if item.quantity == 0 or not item.available:
                 return redirect(to='ecommerce.home')
             Item.objects.filter(pk=item.pk).update(quantity=F('quantity') - 1)
@@ -50,22 +41,24 @@ class ItemView(View):
         user = request.user
         order = Order(item=item, user=user, cart=user.cart_set.last(), price=item.price)
         order.save()
-        return redirect(to='ecommerce:order', order_id=order.id)
+        return redirect(to='ecommerce:order', pk=order.pk)
 
 
 @method_decorator(login_required, name='dispatch')
-class OrderDetailsView(View):
-    template_name = 'ecommerce/order_details.html'
+class OrderView(DetailView):
+    model = Order
+    template_name = 'ecommerce/order/order_details.html'
+    context_object_name = 'order'
 
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        order = get_object_or_404(Order, pk=kwargs['order_id'])
-        return render(request, self.template_name, {
-            'order': order
-        })
+    def get_queryset(self):
+        return self.request.user.order_set
 
-    def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        return render(request, self.template_name, {
-        })
+
+@method_decorator(login_required, name='dispatch')
+class OrderDeleteView(DeleteView):
+    model = Order
+    success_url = '/ecommerce/'
+    template_name = 'ecommerce/order/order_confirm_delete.html'
 
 
 @method_decorator(login_required, name='dispatch')

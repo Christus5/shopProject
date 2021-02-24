@@ -65,6 +65,12 @@ a:hover {
     border-color: white;
 }
 
+.btn-red {
+    background-color: var(--red);
+    color: white;
+    border-color: var(--red);
+}
+
 .page-wrapper {
     margin: 5em 25px;
 }
@@ -140,8 +146,8 @@ a:hover {
 .item-page-wrapper > form {
     grid-column-start: 11;
     grid-column-end: end;
-    grid-row-start: 4;
-    grid-row-end: 4
+    grid-row-start: 5;
+    grid-row-end: 5;
 }
 
 .item-page-wrapper > .tags {

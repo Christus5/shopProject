@@ -1,0 +1,9 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block page-content %}
+    <form method="post">
+        {% csrf_token %}
+        <h2>Are you sure to delete this order?</h2>
+        <button class="btn btn-red">Delete</button>
+    </form>
+{% endblock %}

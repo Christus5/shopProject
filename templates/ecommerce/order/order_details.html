@@ -5,4 +5,8 @@
     <h2>{{ order.item }}</h2>
     <p>{{ order.price }}</p>
 
+    <div style="margin-top: 5em;">
+        <a class="btn btn-red"
+           href="{% url 'ecommerce:order_delete' order.pk %}">Delete</a>
+    </div>
 {% endblock %}

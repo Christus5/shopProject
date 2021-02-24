@@ -21,9 +21,9 @@
                 </div>
                 <section>
                     <br/>
-                    <p><strong>{{ item }}</strong> &mdash; {{ item.price }} $ </p>
+                    <p><strong>{{ item }}</strong> &mdash; {{ item.price }}$ </p>
                     <br/>
-                    <a href="{% url 'ecommerce:item' %}?item_id={{ item.id }}" class="btn">Details</a>
+                    <a href="{% url 'ecommerce:item' item.pk %}" class="btn">Details</a>
                 </section>
 
             </div>

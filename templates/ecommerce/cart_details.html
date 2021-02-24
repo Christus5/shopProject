@@ -20,7 +20,7 @@
                 <h3>Items in cart</h3>
                 {% for order in cart.order_set.all %}
                     <li>
-                        <a href="{% url 'ecommerce:order' order.id %}" class="btn btn-white">
+                        <a href="{% url 'ecommerce:order' order.pk %}" class="btn btn-white">
                             {{ order.item }}
                         </a>
                         <span class="order-status {{ order.status|lower }}">{{ order.status }}</span>

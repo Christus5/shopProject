@@ -17,7 +17,7 @@
             <ul class="orders">
                 {% for order in orders %}
                     <li>
-                        <a href="{% url 'ecommerce:order' order.id %}" class="btn btn-white">
+                        <a href="{% url 'ecommerce:order' order.pk %}" class="btn btn-white">
                             {{ order.item }}
                         </a>
                         <span class="order-status {{ order.status|lower }}">{{ order.status }}</span>
