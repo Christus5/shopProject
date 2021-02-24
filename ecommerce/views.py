@@ -104,3 +104,12 @@ class StoreView(ListView):
     model = Item
     paginate_by = 4
     context_object_name = 'items'
+
+
+class ProfileView(View):
+    template_name = 'ecommerce/profile.html'
+
+    def get(self, request, *args, **kwargs) -> 'HttpResponse':
+        return render(request, self.template_name, {
+            'user': request.user
+        })
