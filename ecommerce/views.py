@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
+from django.http import Http404
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
@@ -49,6 +50,14 @@ class OrderView(DetailView):
     model = Order
     template_name = 'ecommerce/order/order_details.html'
     context_object_name = 'order'
+
+    # def get_object(self, queryset=None):
+    #     try:
+    #         obj = super().get_object()
+    #     except Http404:
+    #         obj = self.request.user.order_set.last()
+    #
+    #     return obj
 
     def get_queryset(self):
         return self.request.user.order_set
