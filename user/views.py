@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.views.generic import View
 
+from ecommerce.models import Cart
 from user.forms import *
 
 
@@ -62,6 +63,7 @@ class RegisterView(View):
 
         if registration_form.is_valid():
             registration_form.save()
+            Cart(user=User.objects.get(username=registration_form.save(commit=False))).save()
             messages.success(request, f"""Successfully registered {registration_form.cleaned_data['username']}""")
             return redirect(settings.LOGOUT_REDIRECT_URL)
 

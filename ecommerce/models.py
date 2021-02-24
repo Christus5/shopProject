@@ -21,7 +21,7 @@ class Info(models.Model):
     description = models.TextField()
 
     def __str__(self) -> str:
-        return self.title
+        return f"""<{self.item}, {self.item.id}> {self.title}"""
 
 
 class ItemImage(models.Model):

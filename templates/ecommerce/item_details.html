@@ -13,11 +13,13 @@
 
         <section>
             <h3>Price &mdash; {{ item.price }}$</h3>
-            {% if item.info %}
-                <div>
-                    <p><strong>{{ item.info.title }}</strong></p>
-                    <p>{{ item.info.description }}</p>
-                </div>
+            {% if item.info_set %}
+                {% for info in item.info_set.all %}
+                    <div>
+                        <p><strong>{{ info.title }}</strong></p>
+                        <p>{{ info.description }}</p>
+                    </div>
+                {% endfor %}
             {% endif %}
 
             <br/>
