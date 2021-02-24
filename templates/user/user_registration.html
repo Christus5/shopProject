@@ -2,15 +2,37 @@
 
 {% block content %}
     <div class="background"></div>
-    <div class="login-wrapper" style="justify-content: normal; padding-top: 2em;">
-        <h1>Register</h1>
-        <br/>
+    <div class="login-wrapper" style="justify-content: center;">
+        <h1 class="login-header">Register</h1>
         <form method="post">
             {% csrf_token %}
-            {% for field in registration_form %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-            {% endfor %}
+            <div class="inputs-wrapper">
+                <div>
+                    <label for="{{ registration_form.id_for_first_name }}">{{ registration_form.first_name.label }}</label>
+                    {{ registration_form.first_name }}
+                </div>
+                <div>
+                    <label for="{{ registration_form.id_for_last_name }}">{{ registration_form.last_name.label }}</label>
+                    {{ registration_form.last_name }}
+                </div>
+            </div>
+            <label for="{{ registration_form.id_for_username }}">{{ registration_form.username.label }}</label>
+            {{ registration_form.username }}
+
+            <label for="{{ registration_form.id_for_email }}">{{ registration_form.email.label }}</label>
+            {{ registration_form.email }}
+
+            <div class="inputs-wrapper">
+                <div>
+                    <label for="{{ registration_form.id_for_password1 }}">{{ registration_form.password1.label }}</label>
+                    {{ registration_form.password1 }}
+                </div>
+                <div>
+                    <label for="{{ registration_form.id_for_password2 }}">Confirm</label>
+                    {{ registration_form.password2 }}
+                </div>
+            </div>
+
             {% if registration_form.errors %}
                 <div class="error-messages">
                     {{ registration_form.errors }}

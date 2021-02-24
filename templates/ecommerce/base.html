@@ -15,19 +15,23 @@
                 <a href="{% url 'ecommerce:store' %}">Store</a>
             </li>
             <li>
-                <a href="{% url 'ecommerce:cart' user.cart_set.last.id %}">Cart</a>
-            </li>
-            <li>
                 <a href=".">Profile</a>
             </li>
             <li>
-                <a href="{% url 'user:logout' %}">Log out</a>
+                <a href="{% url 'user:logout' %}" class="logout-link">Log out</a>
             </li>
         </ul>
 
 
     </nav>
-    <h2 style="text-align: right; margin-right: 1em; margin-top: 0.5em;">Balance: {{ user.balance }} $</h2>
+    <div style="flex-direction: row-reverse; justify-content: right; margin-right: 1em; margin-top: 1em; display: flex">
+        <a href="{% url 'ecommerce:cart' user.cart_set.last.id %}" class="btn" ><span class="material-icons">
+shopping_cart
+</span></a>
+
+        <h2 style="margin: auto 0.5em auto 0; display: inline-block;">Balance: {{ user.balance }} $</h2>
+    </div>
+
 {% endblock %}
 
 {% block content %}

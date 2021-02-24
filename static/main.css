@@ -2,6 +2,7 @@
 @import url('./components/navbar.css');
 @import url('./components/card.css');
 @import url('./components/grid.css');
+@import url('./components/scroll-bar.css');
 
 :root {
     --blue: #3f5efa;
@@ -91,6 +92,7 @@ a:hover {
     overflow-y: scroll;
     background: white;
     border: 2px solid var(--graphite);
+    border-right: 0;
     border-radius: 2px;
     padding: 5px;
     box-sizing: border-box;
@@ -100,7 +102,6 @@ a:hover {
     list-style: none;
     border-bottom: 1px solid var(--graphite);
 }
-
 
 .item-page-wrapper {
     display: grid;
@@ -182,4 +183,8 @@ a:hover {
 
 .delivered {
     background-color: var(--green);
+}
+
+.logout-link:hover {
+    color: var(--red);
 }

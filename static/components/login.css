@@ -1,3 +1,7 @@
+.login-header {
+    margin: 0.5em auto;
+}
+
 .login-wrapper {
     width: 350px;
     height: 100vh;
@@ -40,6 +44,13 @@
     width: 100%;
     margin: 1em 0;
 }
+
+.inputs-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 0.5em;
+}
+
 
 @media only screen and (max-width: 800px) {
     .login-wrapper {

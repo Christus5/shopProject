@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
 
@@ -12,6 +15,8 @@ class Tag(models.Model):
 
 
 class Info(models.Model):
+    item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
+
     title = models.CharField(max_length=200)
     description = models.TextField()
 
@@ -30,12 +35,12 @@ class ItemImage(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=200)
     tag = models.ManyToManyField(to='Tag')
-    info = models.ForeignKey(to='Info', on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
 
     quantity = models.PositiveIntegerField(default=1)
     available = models.BooleanField(default=True)
-    price = models.PositiveIntegerField()
+    price = models.DecimalField(default=0, max_digits=10, decimal_places=2,
+                                validators=[MinValueValidator(Decimal('0'))])
 
     # @TODO: condition - (new, used-good, used-normal, used-damaged)
 
@@ -48,7 +53,8 @@ class Order(models.Model):
     cart = models.ForeignKey(to='Cart', on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
 
-    price = models.PositiveIntegerField()
+    price = models.DecimalField(default=0, max_digits=10, decimal_places=2,
+                                validators=[MinValueValidator(Decimal('0'))])
 
     ordered = models.DateTimeField(auto_now_add=True)
 
