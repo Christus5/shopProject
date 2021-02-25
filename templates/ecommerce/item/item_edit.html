@@ -1,0 +1,12 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block current_page %}
+    Sell
+{% endblock %}
+
+{% block page-content %}
+    <h2>Item Details</h2>
+    <h3>{{ item.name }}</h3>
+
+    <a href="{% url 'ecommerce:create_item_info' %}?item_id={{ item.pk }}">Add info</a>
+{% endblock %}

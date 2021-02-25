@@ -1,37 +1,15 @@
 {% extends 'ecommerce/base.html' %}
 
 {% block page-content %}
-    <div class="item-page-wrapper">
+    <h1>{{ item.name }}</h1>
+    <h3>item details</h3>
+    <ul>
+        {% for info in item.info_set.all %}
+            <li>{{ info.title }}</li>
+        {% endfor %}
 
-        <h2 class="title">{{ item.name }}</h2>
-        <img src="{{ item.itemimage_set.first.image.url }}" alt="item_main_image" class="item-main-image"/>
-        <div class="tags">
-            {% for tag in item.tag.all %}
-                <span class="tag">{{ tag }}</span>
-            {% endfor %}
-        </div>
-
-        <section>
-            <h3>Price &mdash; {{ item.price }}$</h3>
-            {% if item.info_set %}
-                {% for info in item.info_set.all %}
-                    <div>
-                        <p><strong>{{ info.title }}</strong></p>
-                        <p>{{ info.description }}</p>
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            <br/>
-
-        </section>
-        <form method="post">
-            {% csrf_token %}
-            <button class="btn" style="width: 100%;" type="submit">
-                <span class="material-icons">add_shopping_cart</span>
-            </button>
-        </form>
-    </div>
+    </ul>
+    <a href="{% url 'ecommerce:create_item_info' %}?item_id={{ item.pk }}">Add info</a>
 
 
 {% endblock %}

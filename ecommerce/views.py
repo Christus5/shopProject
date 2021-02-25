@@ -55,7 +55,17 @@ class ItemCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = User.objects.get(pk=self.request.user.pk)
         form.save()
-        return redirect(to='ecommerce:home')
+        return redirect(to='ecommerce:item_create_details', pk=form.instance.id)
+
+
+@method_decorator(login_required, name='dispatch')
+class ItemDetailsView(DetailView):
+    model = Item
+    template_name = 'ecommerce/item/item_details.html'
+    context_object_name = 'item'
+
+    def get_queryset(self):
+        return self.request.user.item_set
 
 
 @method_decorator(login_required, name='dispatch')
@@ -64,9 +74,10 @@ class ItemCreateInfoView(CreateView):
     template_name = 'ecommerce/item/item_create.html'
     form_class = InfoCreationForm
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> 'HttpResponse':
+        form.instance.item = self.request.user.item_set.get(pk=self.request.GET.get('item_id'))
         form.save()
-        return redirect(to='ecommerce:home')
+        return redirect(to='ecommerce:item_create_details', pk=form.instance.item.pk)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
