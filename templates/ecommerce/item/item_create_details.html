@@ -1,0 +1,20 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block page-content %}
+    <h1>{{ item.name }}</h1>
+    <h3>item details</h3>
+    <ul>
+        {% for info in item.info_set.all %}
+            <li>{{ info.title }}</li>
+        {% endfor %}
+
+    </ul>
+    <a href="{% url 'ecommerce:create_item_info' %}?item_id={{ item.pk }}">Add info</a>
+
+    <ul>
+        {% for image in item.itemimage_set.all %}
+            <li><img src="{{ image.url }}"/></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'ecommerce:create_item_image' %}?item_id={{ item.pk }}">Add image</a>
+{% endblock %}

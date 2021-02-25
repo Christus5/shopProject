@@ -18,4 +18,16 @@
         <a>Change Password</a>
     </div>
 
+    <div>
+        <h2>Items</h2>
+        <ul>
+            {% for item in user.item_set.all %}
+                <li>
+                    <a href="{% url 'ecommerce:item_create_details' item.pk %}">{{ item.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
 {% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
 
-from ecommerce.models import Item, Info
+from ecommerce.models import Item, Info, ItemImage
 
 
 class ItemCreationForm(forms.ModelForm):
@@ -23,3 +23,10 @@ class InfoCreationForm(forms.ModelForm):
         #     empty_label='Select item',
         #     queryset=user.item_set.all()
         # )
+
+
+class ItemImageForm(forms.ModelForm):
+    class Meta:
+        model = ItemImage
+        fields = '__all__'
+        exclude = ('item',)

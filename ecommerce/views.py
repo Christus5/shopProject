@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.views.generic import View, ListView, DetailView, DeleteView, CreateView
 
-from ecommerce.forms import ItemCreationForm, InfoCreationForm
+from ecommerce.forms import ItemCreationForm, InfoCreationForm, ItemImageForm
 from ecommerce.models import *
 
 
@@ -61,7 +61,7 @@ class ItemCreateView(CreateView):
 @method_decorator(login_required, name='dispatch')
 class ItemDetailsView(DetailView):
     model = Item
-    template_name = 'ecommerce/item/item_details.html'
+    template_name = 'ecommerce/item/item_create_details.html'
     context_object_name = 'item'
 
     def get_queryset(self):
@@ -83,6 +83,18 @@ class ItemCreateInfoView(CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+
+@method_decorator(login_required, name='dispatch')
+class ImageCreationView(CreateView):
+    model = ItemImage
+    template_name = 'ecommerce/item/item_create.html'
+    form_class = ItemImageForm
+
+    def form_valid(self, form) -> 'HttpResponse':
+        form.instance.item = self.request.GET.get('item_id')
+        form.save()
+        return redirect(to='ecommerce:item_create_details', pk=form.instance.item.pk)
 
 
 @method_decorator(login_required, name='dispatch')

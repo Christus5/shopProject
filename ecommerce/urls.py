@@ -8,6 +8,7 @@ urlpatterns = [
     path('item/details/<pk>/', ItemView.as_view(), name='item'),
     path('item/create/', ItemCreateView.as_view(), name='create_item'),
     path('item/create/info/', ItemCreateInfoView.as_view(), name='create_item_info'),
+    path('item/create/image/', ImageCreationView.as_view(), name='create_item_image'),
     path('item/create/details/<pk>', ItemDetailsView.as_view(), name='item_create_details'),
 
     path('order/<pk>/', OrderView.as_view(), name='order'),
