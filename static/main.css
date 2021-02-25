@@ -197,3 +197,7 @@ a:hover {
 .logout-link:hover {
     color: var(--red);
 }
+
+.inputs-wrapper input {
+    border-color: var(--graphite);
+}

@@ -6,8 +6,13 @@
 
 {% block page-content %}
     <form method="post">
-    {% csrf_token %}
-        {{ form }}
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="inputs-wrapper" >
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
         <button class="btn" type="submit">Add</button>
     </form>
 {% endblock %}
