@@ -55,6 +55,7 @@ class Order(models.Model):
 
     price = models.DecimalField(default=0, max_digits=10, decimal_places=2,
                                 validators=[MinValueValidator(Decimal('0'))])
+    is_paid = models.BooleanField(default=False)
 
     ordered = models.DateTimeField(auto_now_add=True)
 
@@ -68,8 +69,6 @@ class Order(models.Model):
 
     # @TODO: deliver_from - address
     # @TODO: deliver_to - address
-
-    # @TODO: ordered - time when user placed order
 
     def __str__(self) -> str:
         return f'<{self.user}>, {self.id}'

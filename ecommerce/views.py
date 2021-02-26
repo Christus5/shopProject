@@ -17,7 +17,7 @@ class HomeView(View):
 
     def get(self, request, *args, **kwargs) -> 'HttpResponse':
         user = request.user
-        orders = user.order_set.all()
+        orders = user.order_set.filter(is_paid=True)
 
         return render(request, self.template_name, {
             'user': user,
@@ -124,7 +124,7 @@ class OrderDeleteView(DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 class CartDetailsView(View):
-    template_name = 'ecommerce/cart_details.html'
+    template_name = 'ecommerce/cart/cart_details.html'
 
     def get(self, request, *args, **kwargs) -> 'HttpResponse':
         cart = get_object_or_404(request.user.cart_set, pk=kwargs['cart_id'])
@@ -139,15 +139,51 @@ class CartDetailsView(View):
 
     def post(self, request, *args, **kwargs) -> 'HttpResponse':
         user = request.user
-        cart = get_object_or_404(request.user.cart_set, pk=kwargs['cart_id'])
+        cart = get_object_or_404(user.cart_set, pk=kwargs['cart_id'])
+
+        if not cart.order_set.all():
+            messages.error(request, 'Cart is empty')
+
+            return render(request, self.template_name, {
+                'cart': cart
+            })
 
         if user.balance >= cart.get_total_price():
-            return redirect(to='ecommerce:home')
+            return redirect(to='ecommerce:cart_checkout', cart_id=kwargs['cart_id'])
 
         messages.error(request, 'Insufficient funds!')
+
         return render(request, self.template_name, {
             'cart': cart
         })
+
+
+@method_decorator(login_required, name='dispatch')
+class CartCheckoutView(View):
+    template_name = 'ecommerce/cart/checkout.html'
+
+    def get(self, request, *args, **kwargs) -> 'HttpResponse':
+        user = request.user
+        cart = get_object_or_404(user.cart_set, pk=kwargs['cart_id'])
+
+        return render(request, self.template_name, {
+            'cart': cart
+        })
+
+    def post(self, request, *args, **kwargs) -> 'HttpResponse':
+        user = request.user
+        cart = get_object_or_404(user.cart_set, pk=kwargs['cart_id'])
+
+        User.objects.filter(pk=user.pk).update(balance=F('balance') - cart.get_total_price())
+        messages.success(request, f'Successfully purchased! Total: {cart.get_total_price()}')
+
+        cart.order_set.update(is_paid=True)
+        cart.is_active = False
+        cart.save()
+
+        user.cart_set.create(user=user)
+
+        return redirect(to='ecommerce:home')
 
 
 @method_decorator(login_required, name='dispatch')

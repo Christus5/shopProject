@@ -7,6 +7,14 @@
 {% block page-content %}
 
     <div class="card large" style="min-width: 350px">
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+
+        {% endif %}
         <header>
             <h3>My orders</h3>
         </header>

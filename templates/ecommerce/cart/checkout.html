@@ -1,0 +1,18 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block current_page %}
+    Cart
+{% endblock %}
+
+{% block page-content %}
+    <h3>Total: {{ cart.get_total_price }}</h3>
+    {% for order in cart.order_set.all %}
+        <p>{{ order.item }} &mdash; {{ order.price }}</p>
+    {% endfor %}
+
+    <form class="checkout" method="post">
+        {% csrf_token %}
+        <button class="btn" type="submit">Purchase</button>
+    </form>
+
+{% endblock %}
