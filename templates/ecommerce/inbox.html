@@ -1,0 +1,35 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block current_page %}
+    Inbox
+{% endblock %}
+
+{% block page-content %}
+    <table class="table" style="color:white; background-color: var(--graphite); padding: 25px; width: 100%;">
+        <tbody>
+        {% for order in orders %}
+
+            <tr>
+                <td>
+                    {{ order.item }}
+                </td>
+                <td>
+                    {{ order.user }}
+                </td>
+                <td>
+                    <span class="order-status {{ order.status|lower }}">{{ order.status }}</span>
+                </td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input name="order_id" value="{{ order.pk }}" type="hidden"/>
+                        <button type="submit" class="btn btn-white">Ship Order</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+{% endblock %}

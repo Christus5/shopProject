@@ -194,6 +194,7 @@ class StoreView(ListView):
     context_object_name = 'items'
 
 
+@method_decorator(login_required, name='dispatch')
 class ProfileView(View):
     template_name = 'ecommerce/profile.html'
 
@@ -201,3 +202,23 @@ class ProfileView(View):
         return render(request, self.template_name, {
             'user': request.user
         })
+
+
+@method_decorator(login_required, name='dispatch')
+class InboxView(View):
+    template_name = 'ecommerce/inbox.html'
+
+    def get(self, *args, **kwargs) -> 'HttpResponse':
+        orders = Order.objects.filter(item__user=self.request.user)
+        return render(self.request, self.template_name, {
+            'orders': orders
+        })
+
+    def post(self, request, *args, **kwargs) -> 'HttpResponse':
+        order = get_object_or_404(Order.objects.filter(item__user=request.user),
+                                  pk=self.request.POST.get('order_id'))
+
+        order.status = 'Shipped'
+        order.save()
+
+        return redirect(to='ecommerce:inbox')

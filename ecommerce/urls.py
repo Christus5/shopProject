@@ -18,5 +18,6 @@ urlpatterns = [
     path('cart/<int:cart_id>/checkout', CartCheckoutView.as_view(), name='cart_checkout'),
 
     path('store/', StoreView.as_view(), name='store'),
-    path('profile/', ProfileView.as_view(), name='profile')
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('inbox/', InboxView.as_view(), name='inbox')
 ]
