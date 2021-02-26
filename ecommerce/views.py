@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import Http404
 from django.utils.decorators import method_decorator
 
@@ -209,14 +209,19 @@ class InboxView(View):
     template_name = 'ecommerce/inbox.html'
 
     def get(self, *args, **kwargs) -> 'HttpResponse':
-        orders = Order.objects.filter(item__user=self.request.user)
+        orders_q = Q(item__user=self.request.user) & Q(is_paid=True)
+
+        orders = Order.objects.filter(orders_q)
         return render(self.request, self.template_name, {
             'orders': orders
         })
 
     def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        order = get_object_or_404(Order.objects.filter(item__user=request.user),
-                                  pk=self.request.POST.get('order_id'))
+        orders_q = Q(item__user=request.user) & Q(is_paid=True)
+        order = get_object_or_404(
+            Order.objects.filter(orders_q),
+            pk=self.request.POST.get('order_id')
+        )
 
         order.status = 'Shipped'
         order.save()
