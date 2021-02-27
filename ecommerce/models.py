@@ -3,6 +3,8 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
+from django.utils.text import slugify
 
 from user.models import User
 
@@ -36,6 +38,7 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     tag = models.ManyToManyField(to='Tag')
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
 
     quantity = models.PositiveIntegerField(default=1)
     available = models.BooleanField(default=True)
@@ -43,6 +46,13 @@ class Item(models.Model):
                                 validators=[MinValueValidator(Decimal('0'))])
 
     # @TODO: condition - (new, used-good, used-normal, used-damaged)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(f'{self.pk} {self.name} {self.pk}')
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self) -> 'str':
+        return reverse('ecommerce:item', kwargs={'slug': self.slug})
 
     def __str__(self) -> str:
         return self.name

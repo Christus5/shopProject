@@ -23,7 +23,7 @@
                     <br/>
                     <p><strong>{{ item }}</strong> &mdash; {{ item.price }}$ </p>
                     <br/>
-                    <a href="{% url 'ecommerce:item' item.pk %}" class="btn">Details</a>
+                    <a href="{{ item.get_absolute_url }}" class="btn">Details</a>
                 </section>
 
             </div>
