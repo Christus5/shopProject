@@ -6,6 +6,7 @@
 @import url('./components/paginator.css');
 
 @import "cart-page.css";
+@import "order-details-page.css";
 
 :root {
     --blue: #3f5efa;
@@ -24,6 +25,7 @@
 
 body {
     font-family: Consolas, Arial, sans-serif;
+    min-height: 100vh;
 }
 
 
@@ -200,4 +202,8 @@ a:hover {
 
 .inputs-wrapper input {
     border-color: var(--graphite);
+}
+
+.text-center {
+    text-align: center;
 }

@@ -43,7 +43,8 @@ class ItemView(DetailView):
         user = request.user
         order = Order(item=item, user=user, cart=user.cart_set.last(), price=item.price)
         order.save()
-        return redirect(to='ecommerce:order', pk=order.pk)
+        messages.success(request, 'Order Successfully created')
+        return redirect(to=order.get_absolute_url())
 
 
 @method_decorator(login_required, name='dispatch')
@@ -121,6 +122,11 @@ class OrderDeleteView(DeleteView):
     success_url = '/ecommerce/'
     template_name = 'ecommerce/order/order_confirm_delete.html'
 
+    def delete(self, request, *args, **kwargs):
+        order = self.get_object()
+        Item.objects.filter(pk=order.item.pk).update(quantity=F('quantity') + 1)
+        return super().delete(request, *args, **kwargs)
+
 
 @method_decorator(login_required, name='dispatch')
 class CartDetailsView(View):
@@ -161,6 +167,7 @@ class CartDetailsView(View):
 @method_decorator(login_required, name='dispatch')
 class CartCheckoutView(View):
     template_name = 'ecommerce/cart/checkout.html'
+    success_url = 'ecommerce:home'
 
     def get(self, request, *args, **kwargs) -> 'HttpResponse':
         user = request.user
@@ -183,7 +190,7 @@ class CartCheckoutView(View):
 
         user.cart_set.create(user=user)
 
-        return redirect(to='ecommerce:home')
+        return redirect(to=self.success_url)
 
 
 @method_decorator(login_required, name='dispatch')

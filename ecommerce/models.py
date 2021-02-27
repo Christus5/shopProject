@@ -4,7 +4,6 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
-from django.utils.text import slugify
 
 from user.models import User
 
@@ -38,7 +37,6 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     tag = models.ManyToManyField(to='Tag')
     user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
-    slug = models.SlugField(max_length=60, unique=True, blank=True)
 
     quantity = models.PositiveIntegerField(default=1)
     available = models.BooleanField(default=True)
@@ -47,12 +45,8 @@ class Item(models.Model):
 
     # @TODO: condition - (new, used-good, used-normal, used-damaged)
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(f'{self.pk} {self.name} {self.pk}')
-        return super().save(*args, **kwargs)
-
-    def get_absolute_url(self) -> 'str':
-        return reverse('ecommerce:item', kwargs={'slug': self.slug})
+    def get_absolute_url(self) -> str:
+        return reverse('ecommerce:item', kwargs={'pk': self.pk})
 
     def __str__(self) -> str:
         return self.name
@@ -80,6 +74,9 @@ class Order(models.Model):
     # @TODO: deliver_from - address
     # @TODO: deliver_to - address
 
+    def get_absolute_url(self) -> str:
+        return reverse('ecommerce:order', kwargs={'pk': self.pk})
+
     def __str__(self) -> str:
         return f'<{self.user}>, {self.id}'
 
@@ -92,6 +89,9 @@ class Cart(models.Model):
 
     def get_total_price(self) -> Decimal:
         return round(self.order_set.aggregate(Sum('price'))['price__sum'], 2) if self.order_set.all() else 0
+
+    def get_absolute_url(self) -> str:
+        return reverse('ecommerce:cart', kwargs={'cart_id': self.pk})
 
     def __str__(self) -> str:
         return f'<{self.user}>, {self.id}'

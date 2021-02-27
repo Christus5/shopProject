@@ -59,11 +59,3 @@ input:focus {
     box-sizing: border-box;
     border-radius: 5px;
 }
-
-@media only screen and (max-width: 800px) {
-    .login-wrapper {
-        position: static;
-        margin: 0 auto;
-        height: 450px;
-    }
-}

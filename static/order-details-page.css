@@ -1,0 +1,5 @@
+.order-details {
+    padding: 25px;
+    box-sizing: border-box;
+    border: 2px solid var(--graphite);
+}
