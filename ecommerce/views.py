@@ -6,9 +6,13 @@ from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.views.generic import View, ListView, DetailView, DeleteView, CreateView
+from rest_framework import permissions
+from rest_framework import generics
+from rest_framework.response import Response
 
 from ecommerce.forms import ItemCreationForm, InfoCreationForm, ItemImageForm
 from ecommerce.models import *
+from ecommerce.serializers import ItemSerializer, OrderSerializer
 
 
 @method_decorator(login_required, name='dispatch')
@@ -98,32 +102,50 @@ class ImageCreationView(CreateView):
         return redirect(to='ecommerce:item_create_details', pk=form.instance.item.pk)
 
 
-@method_decorator(login_required, name='dispatch')
-class OrderView(DetailView):
-    model = Order
-    template_name = 'ecommerce/order/order_details.html'
-    context_object_name = 'order'
+# @method_decorator(login_required, name='dispatch')
+# class OrderView(DetailView):
+#     model = Order
+#     template_name = 'ecommerce/order/order_details.html'
+#     context_object_name = 'order'
+#
+#     # def get_object(self, queryset=None):
+#     #     try:
+#     #         obj = super().get_object()
+#     #     except Http404:
+#     #         obj = self.request.user.order_set.last()
+#     #
+#     #     return obj
+#
+#     def get_queryset(self):
+#         return self.request.user.order_set
 
-    # def get_object(self, queryset=None):
-    #     try:
-    #         obj = super().get_object()
-    #     except Http404:
-    #         obj = self.request.user.order_set.last()
-    #
-    #     return obj
+
+# @method_decorator(login_required, name='dispatch')
+# class OrderDeleteView(DeleteView):
+#     model = Order
+#     success_url = '/ecommerce/'
+#     template_name = 'ecommerce/order/order_confirm_delete.html'
+#
+#     def delete(self, request, *args, **kwargs):
+#         order = self.get_object()
+#         Item.objects.filter(pk=order.item.pk).update(quantity=F('quantity') + 1)
+#         return super().delete(request, *args, **kwargs)
+
+
+class OrderView(generics.RetrieveDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.order_set
+        self.queryset = self.request.user.order_set.all()
+        return super().get_queryset()
 
-
-@method_decorator(login_required, name='dispatch')
-class OrderDeleteView(DeleteView):
-    model = Order
-    success_url = '/ecommerce/'
-    template_name = 'ecommerce/order/order_confirm_delete.html'
-
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs) -> Response:
         order = self.get_object()
+        if order.is_paid:
+            return Response("can't remove already paid order", status=405)
+
         Item.objects.filter(pk=order.item.pk).update(quantity=F('quantity') + 1)
         return super().delete(request, *args, **kwargs)
 
@@ -193,12 +215,17 @@ class CartCheckoutView(View):
         return redirect(to=self.success_url)
 
 
-@method_decorator(login_required, name='dispatch')
-class StoreView(ListView):
-    template_name = 'ecommerce/store.html'
-    model = Item
-    paginate_by = 4
-    context_object_name = 'items'
+# @method_decorator(login_required, name='dispatch')
+# class StoreView(ListView):
+#     template_name = 'ecommerce/store.html'
+#     model = Item
+#     paginate_by = 4
+#     context_object_name = 'items'
+
+class StoreView(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 @method_decorator(login_required, name='dispatch')
