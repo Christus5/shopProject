@@ -13,12 +13,22 @@
             </ul>
         {% endif %}
 
-        <form method="post">
+        <form method="post" action="http://localhost:8000/authenticate/">
             {% csrf_token %}
-            {% for field in login_form %}
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-            {% endfor %}
+            <label for="id-username">Username</label>
+            <input
+                    id="id-username"
+                    name="username"
+                    type="text"
+                    placeholder="username"
+            />
+            <label for="id-password">Password</label>
+            <input id="id-password"
+                   name="password"
+                   type="password"
+                   placeholder="Password"
+            />
+
             {% if login_form.errors %}
                 <div class="error-messages">
                     {{ login_form.errors }}

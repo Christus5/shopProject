@@ -8,36 +8,41 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from django.views.generic import View, FormView, CreateView, RedirectView
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from ecommerce.models import Cart
 from user.forms import *
 
 
-class LoginView(FormView):
-    template_name = 'user/user_login.html'
-    form_class = AuthenticationForm
-    success_url = settings.LOGIN_REDIRECT_URL
-
-    def form_valid(self, form):
-        login(self.request, form.get_user())
-        return redirect(self.success_url)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['login_form'] = context.get('form')
-        return context
-
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
-        return super().get(request)
-
-    def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
-        return super().post(request)
+# class LoginView(FormView):
+#     template_name = 'user/user_login.html'
+#     form_class = AuthenticationForm
+#     success_url = settings.LOGIN_REDIRECT_URL
+#
+#     def form_valid(self, form):
+#         login(self.request, form.get_user())
+#         return redirect(self.success_url)
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['login_form'] = context.get('form')
+#         return context
+#
+#     def get(self, request, *args, **kwargs) -> 'HttpResponse':
+#         if request.user.is_authenticated:
+#             return redirect(settings.LOGIN_REDIRECT_URL)
+#
+#         return super().get(request)
+#
+#     def post(self, request, *args, **kwargs) -> 'HttpResponse':
+#         if request.user.is_authenticated:
+#             return redirect(settings.LOGIN_REDIRECT_URL)
+#
+#         return super().post(request)
+from user.serializers import UserRegisterSerializer
 
 
 @method_decorator(login_required, name='dispatch')
@@ -50,30 +55,17 @@ class LogoutView(RedirectView):
         return super().get(request)
 
 
-class RegisterView(CreateView):
-    template_name = 'user/user_registration.html'
-    form_class = RegistrationForm
-    success_url = settings.LOGOUT_REDIRECT_URL
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['registration_form'] = context.get('form')
-        return context
-
-    def form_valid(self, form):
-        form.save()
-        Cart(user=User.objects.get(username=form.save(commit=False))).save()
-        messages.success(self.request, f"""Successfully registered {form.cleaned_data['username']}""")
-        return redirect(self.success_url)
-
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
-        return super().get(request)
-
-    def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
-        return super().post(request)
+@api_view(['POST'])
+def register_api_view(request):
+    if request.method == 'POST':
+        serializer = UserRegisterSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            user = serializer.save()
+            data['response'] = "User created successfully!"
+            data['username'] = user.username
+            data['email'] = user.email
+            data['token'] = Token.objects.get(user=user).key
+        else:
+            data = serializer.errors
+        return Response(data)
