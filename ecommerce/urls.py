@@ -8,10 +8,8 @@ urlpatterns = [
     path('item/<pk>/', ItemAPIView.as_view(), name='item'),
     path('item/create/', ItemCreateAPIView.as_view(), name='create_item'),
     path('item/create/image/', ImageCreationView.as_view(), name='create_item_image'),
-    path('item/create/details/<pk>', ItemDetailsView.as_view(), name='item_create_details'),
 
     path('order/<pk>/', OrderAPIView.as_view(), name='order'),
-    # path('order/<pk>/delete/', OrderDeleteView.as_view(), name='order_delete'),
 
     path('cart/<int:cart_id>/', CartDetailsView.as_view(), name='cart'),
     path('cart/<int:cart_id>/checkout', CartCheckoutView.as_view(), name='cart_checkout'),
