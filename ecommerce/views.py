@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Q
-from django.http import Http404
 from django.utils.decorators import method_decorator
 
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
-from django.views.generic import View, ListView, DetailView, DeleteView, CreateView
+from django.views.generic import View, DetailView, CreateView
+
+from rest_framework import status, mixins
 from rest_framework import permissions
 from rest_framework import generics
 from rest_framework.response import Response
@@ -30,28 +31,6 @@ class HomeView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-class ItemView(DetailView):
-    model = Item
-    template_name = 'ecommerce/item/item_details.html'
-    context_object_name = 'item'
-
-    def post(self, request, *args, **kwargs) -> 'HttpResponse':
-        try:
-            item = self.get_object()
-            if item.quantity == 0 or not item.available:
-                return redirect(to='ecommerce.home')
-            Item.objects.filter(pk=item.pk).update(quantity=F('quantity') - 1)
-        except:
-            return redirect(to='ecommerce:home')
-
-        user = request.user
-        order = Order(item=item, user=user, cart=user.cart_set.last(), price=item.price)
-        order.save()
-        messages.success(request, 'Order Successfully created')
-        return redirect(to=order.get_absolute_url())
-
-
-@method_decorator(login_required, name='dispatch')
 class ItemCreateView(CreateView):
     model = Item
     template_name = 'ecommerce/item/item_create.html'
@@ -61,16 +40,6 @@ class ItemCreateView(CreateView):
         form.instance.user = User.objects.get(pk=self.request.user.pk)
         form.save()
         return redirect(to='ecommerce:item_create_details', pk=form.instance.id)
-
-
-@method_decorator(login_required, name='dispatch')
-class ItemDetailsView(DetailView):
-    model = Item
-    template_name = 'ecommerce/item/item_create_details.html'
-    context_object_name = 'item'
-
-    def get_queryset(self):
-        return self.request.user.item_set
 
 
 @method_decorator(login_required, name='dispatch')
@@ -90,6 +59,41 @@ class ItemCreateInfoView(CreateView):
         return kwargs
 
 
+class ItemCreateAPIView(generics.CreateAPIView):
+    queryset = Item.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ItemSerializer
+
+
+class ItemAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Item.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = ItemSerializer
+
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = request.user.item_set.get(pk=self.get_object().pk)
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        except Item.DoesNotExist:
+            return Response({
+                'error': "Item either doesn't exist or user has no permission"},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            instance = request.user.item_set.get(pk=self.get_object().pk)
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Item.DoesNotExist:
+            return Response({
+                'error': "Item either doesn't exist or user has no permission"},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 @method_decorator(login_required, name='dispatch')
 class ImageCreationView(CreateView):
     model = ItemImage
@@ -102,37 +106,7 @@ class ImageCreationView(CreateView):
         return redirect(to='ecommerce:item_create_details', pk=form.instance.item.pk)
 
 
-# @method_decorator(login_required, name='dispatch')
-# class OrderView(DetailView):
-#     model = Order
-#     template_name = 'ecommerce/order/order_details.html'
-#     context_object_name = 'order'
-#
-#     # def get_object(self, queryset=None):
-#     #     try:
-#     #         obj = super().get_object()
-#     #     except Http404:
-#     #         obj = self.request.user.order_set.last()
-#     #
-#     #     return obj
-#
-#     def get_queryset(self):
-#         return self.request.user.order_set
-
-
-# @method_decorator(login_required, name='dispatch')
-# class OrderDeleteView(DeleteView):
-#     model = Order
-#     success_url = '/ecommerce/'
-#     template_name = 'ecommerce/order/order_confirm_delete.html'
-#
-#     def delete(self, request, *args, **kwargs):
-#         order = self.get_object()
-#         Item.objects.filter(pk=order.item.pk).update(quantity=F('quantity') + 1)
-#         return super().delete(request, *args, **kwargs)
-
-
-class OrderView(generics.RetrieveDestroyAPIView):
+class OrderAPIView(generics.RetrieveDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -215,14 +189,7 @@ class CartCheckoutView(View):
         return redirect(to=self.success_url)
 
 
-# @method_decorator(login_required, name='dispatch')
-# class StoreView(ListView):
-#     template_name = 'ecommerce/store.html'
-#     model = Item
-#     paginate_by = 4
-#     context_object_name = 'items'
-
-class StoreView(generics.ListAPIView):
+class StoreAPIView(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [permissions.IsAuthenticated]
