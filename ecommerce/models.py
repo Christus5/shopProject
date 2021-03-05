@@ -26,7 +26,7 @@ class Info(models.Model):
 
 
 class ItemImage(models.Model):
-    image = models.ImageField(upload_to=f"""ecommerce/item-images""")
+    image = models.ImageField(upload_to='ecommerce/item-images')
     item = models.ForeignKey(to='Item', on_delete=models.CASCADE)
 
     def __str__(self) -> str:

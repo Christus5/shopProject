@@ -20,8 +20,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('user.urls')),
-    path('ecommerce/', include('ecommerce.urls'))
+    path('user/', include('user.urls')),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+    path('ecommerce/', include('ecommerce.urls')),
 ]
 
 if settings.DEBUG:

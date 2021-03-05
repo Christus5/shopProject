@@ -9,25 +9,25 @@ from django.views.generic import View, DetailView, CreateView
 from rest_framework import status, mixins
 from rest_framework import permissions
 from rest_framework import generics
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ecommerce.forms import ItemCreationForm, InfoCreationForm, ItemImageForm
 from ecommerce.models import *
-from ecommerce.serializers import ItemSerializer, OrderSerializer
+from ecommerce.serializers import ItemSerializer, OrderSerializer, ItemCreateSerializer
 
 
-@method_decorator(login_required, name='dispatch')
-class HomeView(View):
-    template_name = 'ecommerce/home.html'
+class HomeView(APIView):
+    def get(self, request, *args, **kwargs) -> 'Response':
+        base_url = 'http://localhost:8000/ecommerce'
+        urls = {
+            'Store': f'{base_url}/store/',
+            'Order': f'{base_url}/<pk>/',
+            'Item': f'{base_url}/item/<pk>/'
+        }
 
-    def get(self, request, *args, **kwargs) -> 'HttpResponse':
-        user = request.user
-        orders = user.order_set.filter(is_paid=True)
-
-        return render(request, self.template_name, {
-            'user': user,
-            'orders': orders
-        })
+        return Response(data=urls, status=status.HTTP_200_OK)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -61,8 +61,10 @@ class ItemCreateInfoView(CreateView):
 
 class ItemCreateAPIView(generics.CreateAPIView):
     queryset = Item.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = ItemSerializer
+    serializer_class = ItemCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class ItemAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -94,18 +96,6 @@ class ItemAPIView(generics.RetrieveUpdateDestroyAPIView):
                 status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-@method_decorator(login_required, name='dispatch')
-class ImageCreationView(CreateView):
-    model = ItemImage
-    template_name = 'ecommerce/item/item_create.html'
-    form_class = ItemImageForm
-
-    def form_valid(self, form) -> 'HttpResponse':
-        form.instance.item = self.request.GET.get('item_id')
-        form.save()
-        return redirect(to='ecommerce:item_create_details', pk=form.instance.item.pk)
-
-
 class OrderAPIView(generics.RetrieveDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -122,6 +112,18 @@ class OrderAPIView(generics.RetrieveDestroyAPIView):
 
         Item.objects.filter(pk=order.item.pk).update(quantity=F('quantity') + 1)
         return super().delete(request, *args, **kwargs)
+
+
+class CartAPIView(generics.RetrieveAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        pass
+
+    def get_queryset(self):
+        pass
 
 
 @method_decorator(login_required, name='dispatch')
