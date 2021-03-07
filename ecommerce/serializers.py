@@ -3,10 +3,11 @@ from rest_framework import serializers
 
 
 class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        exclude = ('id',)
-        model = Tag
+    id = serializers.IntegerField(read_only=True)
 
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +16,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    tag = serializers.ListSerializer(child=serializers.CharField(source='tag.title'))
+    # tag = serializers.ListSerializer(child=TagSerializer())
+    tag = TagSerializer(many=True)
     images = ImageSerializer(many=True, source='itemimage_set')
 
     class Meta:
@@ -30,9 +32,11 @@ class ItemCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Order
-        fields = '__all__'
+        exclude = ('user',)
+        depth = 2
 
 
 class CartSerializer(serializers.ModelSerializer):

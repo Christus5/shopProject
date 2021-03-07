@@ -53,12 +53,11 @@ class User(AbstractUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
 
-    ACCOUNT_TYPE_CHOICES = [
-        ('Premium', 'premium'),
-        ('Default', 'default')
-    ]
+    class ATC(models.IntegerChoices):
+        premium = 1, 'Premium'
+        default = 2, 'Default'
 
-    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES, default='default')
+    account_type = models.IntegerField(max_length=20, choices=ATC.choices, default=ATC.default.value)
 
     USERNAME_FIELD = 'username'
     objects = UserManager()
@@ -75,9 +74,3 @@ class User(AbstractUser):
 
     def has_module_perms(self, app_label):
         return True
-
-#
-# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-# def generate_auth_token(sender, instance=None, created=False, **kwargs):
-#     if created:
-#         Token.objects.create(user=instance)
